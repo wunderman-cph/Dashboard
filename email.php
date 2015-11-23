@@ -106,7 +106,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!-- Your Page Content Here -->
         <div class="container" id="inside">
-		      <iframe id="ifm" src="http://192.168.95.101/login.php"></iframe>
+		      <iframe id="ifm" src="login.php"></iframe>
         </div>
 
       </div><!-- /.content-wrapper -->
