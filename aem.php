@@ -163,7 +163,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     Launch AEM
                   </td>
                   <td>
-                    <a href="http://192.168.95.101:4502"><button type="button" class="btn btn-block btn-success">Launch</button></a>
+                    <a href="http://<?=$_SERVER['HTTP_HOST']?>:4502"><button type="button" class="btn btn-block btn-success">Launch</button></a>
                   </td>
                 </tr>                    
                 <tr>
@@ -171,7 +171,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     Launch CRX
                   </td>
                   <td>
-                    <a href="http://192.168.95.101:4502/crx/de/index.jsp"><button type="button" class="btn btn-block btn-success">Launch</button></a>
+                    <a href="http://<?=$_SERVER['HTTP_HOST']?>:4502/crx/de/index.jsp"><button type="button" class="btn btn-block btn-success">Launch</button></a>
                   </td>
                 </tr>    
                 <tr>
@@ -179,7 +179,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     Launch ConfigMgr
                   </td>
                   <td>
-                    <a href="http://192.168.95.101:4502/system/console/configMgr"><button type="button" class="btn btn-block btn-success">Launch</button></a>
+                    <a href="http://<?=$_SERVER['HTTP_HOST']?>:4502/system/console/configMgr"><button type="button" class="btn btn-block btn-success">Launch</button></a>
                   </td>
                 </tr>                 
                 <tr>
@@ -187,7 +187,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     AEM Demo Site
                   </td>
                   <td>
-                    <a href="http://192.168.95.101:4503">http://192.168.95.101:4503</a>
+                    <a href="http://<?=$_SERVER['HTTP_HOST']?>:4503">http://<?=$_SERVER['HTTP_HOST']?>:4503</a>
                   </td>
                 </tr>  
               </table>
