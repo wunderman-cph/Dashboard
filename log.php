@@ -12,23 +12,20 @@
   /* Return log file output */
 
 
-  function getFile($f) {
+  function getFile($file) {
 
-    if (isset($_GET['file'])) {
-      $file=$_GET['file'];
-      session_start();
-      $handle = fopen($file,'r');
+    session_start();
+    $handle = fopen($file,'r');
 
-      if (isset($_SESSION['offset'])) {
-        $data = stream_get_contents($handle, -1, $_SESSION['offset']);
-        echo nl2br($data);
-      } else {
-        fseek($handle, 0, SEEK_END);
-        $_SESSION['offset'] = ftell($handle);
-      } 
-      exit();
+    if (isset($_SESSION['offset'])) {
+      $data = stream_get_contents($handle, -1, $_SESSION['offset']);
+      echo nl2br($data);
+    } else {
+      fseek($handle, 0, SEEK_END);
+      $_SESSION['offset'] = ftell($handle);
+    } 
+    exit();
 
-    }
   }
 
 ?>

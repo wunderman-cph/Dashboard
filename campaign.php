@@ -4,6 +4,21 @@
 
   /* Neolane PDump */
   $nlpdump = getCommand('sudo -i -u neolane bash -c ". nl6/env.sh;/usr/local/neolane/nl6/bin/nlserver pdump"');
+  $catalinalog = getCommand('tail -n 1000 $(/bin/ls -1t /usr/local/neolane/nl6/var/logs/* | /bin/sed q)');
+
+  if (strpos($nlpdump,'web@') !== false) {
+    $nlstatus = "Running";
+  } else {
+    $nlstatus = "Not Running";
+  }
+
+  $c = getCommand('sudo -i -u neolane bash -c ". nl6/env.sh;/usr/local/neolane/nl6/bin/nlserver web -version"');
+  if (preg_match("/for (.*?) o/i", $c, $matches)) {
+    $nlversion = $matches[1];
+  } else {
+    $nlversion = $c;
+  }
+
 
 ?>
 
@@ -127,7 +142,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     Campaign Version
                   </td>
                   <td>
-                    $nlversion
+                    <?= $nlversion ?>
                   </td>
                 </tr>
                 <tr>
@@ -151,7 +166,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     Status
                   </td>
                   <td>
-                    $nlstatus
+                    <?= $nlstatus ?>
                   </td>
                 </tr>                
                 <tr>
@@ -159,7 +174,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     Launch
                   </td>
                   <td>
-                    <button type="button" class="btn btn-block btn-success">Launch</button>
+                    <a href="http://<?=$_SERVER['HTTP_HOST']?>:8080/view/home"><button type="button" class="btn btn-block btn-success">Launch</button></a>
                   </td>
                 </tr>
               </table>
@@ -167,19 +182,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </div>
         </div>
 
-          <!-- TODO List -->
-        <div class="row">
-          <div class="col-md-12">
-            <ol>
-              <li>Status of Campaign</li>
-              <li>Turn on and off and reset nlserver</li>
-              <li>nlserver pdump output</li>
-              <li>Log area</li>
-            </ol>
-          </div>
-        </div>
-
-          <!-- Logs -->
+        <!-- Logs -->
         <div class="row">
           <div class="col-md-12">
             <div class="nav-tabs-custom" style="cursor: move;">
@@ -192,14 +195,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </ul>
               <div class="tab-content">
                 <!-- PDump -->
-                <div class="tab-pane active" id="pdump" style="position: relative; height: 300px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-
-                    <code>>
-                    <?= $nlpdump ?>
-                    </code>
-
+                <div class="tab-pane active" id="pdump" style="position: relative; min-height: 100px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                <pre><?= $nlpdump ?></pre>
                 </div>
-                <div class="tab-pane" id="log" style="position: relative; height: 300px;"></div>
+                <div class="tab-pane" id="log" style="position: relative; min-height: 100px;">
+                <pre><?= $catalinalog ?></pre>
+                </div>
               </div>
             </div>
           </div>
