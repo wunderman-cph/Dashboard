@@ -1,6 +1,6 @@
 <?php 
 
-	$cp = $_SERVER[REQUEST_URI];
+	$cp = $_SERVER["REQUEST_URI"];
 
 	function li_active($p) {
 		if (strpos($_SERVER['PHP_SELF'], $p)) echo 'class="active"';
@@ -31,6 +31,7 @@
 
     <li class="header">WUNDERMAN</li>
      <li <?=li_active('email.php')?>><a href="email.php"><i class="fa fa-link"></i> <span>Email</span></a></li>
+     <li <?=li_active('webhook.php')?>><a href="webhook.php"><i class="fa fa-link"></i> <span>Webservice Trap</span></a></li>
     <li class="treeview">
       <a href="#"><i class="fa fa-link"></i> <span>Websites</span> <i class="fa fa-angle-left pull-right"></i></a>
       <ul class="treeview-menu">
