@@ -1,13 +1,3 @@
-<?php
-  $doc = new DomDocument;
-
-  // We need to validate our document before refering to the id
-  //$doc->validateOnParse = true;
-  $doc->loadXML(file_get_contents('http://'.$_SERVER["HTTP_HOST"].':8080/wdm/Key.jssp'));
-  
-  echo $doc->saveXML();
-?>
-
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -46,6 +36,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
         margin: 0;            /* Reset default margin */
         padding: 0px;
         width:100%;
+        height:100%;
+    }
+    iframe {
+        display: block;       /* iframes are inline by default */
+        background: #000;
+        border: none;         /* Reset default border */
+        height: 100vh;        /* Viewport-relative units */
+        width: 100vw;   /* Still doesn't reflect true width */
     }
     </style>
   </head>
@@ -107,35 +105,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
 
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-
-          <!-- Content -->
-          <h1>
-            Webservice Endpoint
-          </h1>
-
-          <!-- Breadcrumb -->
-          <ol class="breadcrumb">
-
-          </ol>
-
-        </section>
-
-
           <!-- Your Page Content Here -->
-        <section class="content">
-          <div class="row">            
-            <div class="col-md-12">
-              <p>API Endpoint: <strong>http://api.webhookinbox.com/i/<?=$id?>/in/</strong></p>
-              <p>This page will update every 5 seconds</p>
-              <div class="container" id="webhook">
-    		        <pre>Waiting for Webservice call</pre>  
-              </div>
-            </div>
-        
-            </div>
-            </section>
+        <div class="container" id="inside">
+		      <iframe id="ifm" src="https://support.neolane.net/doc/AC6.1/en/RN.html"></iframe>
         </div>
 
       </div><!-- /.content-wrapper -->
@@ -221,23 +193,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
      <!-- Custom Code -->
      <script>
 
-     var last_cursor = 0;
-     var id = <?= $doc ?>;
-     setInterval(function(){ doPoll(); }, 1000);
-    
-      function toHtml(str) {
-          return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      }
 
-      function doPoll(){
-        $.get('http://api.webhookinbox.com/i/'+id+'/items/?order=created&since=id:'+last_cursor, function(data) {
-            if (data.items.length > 0 && data.last_cursor != last_cursor) {
-              last_cursor = data.last_cursor;
-              $("#webhook").html("<pre>"+toHtml(data.items[data.items.length-1].body)+"</pre>");
-            }
-            setTimeout(doPoll,4000);
-        });
-      }
+      /* Required for post resize event processing */
+
+      var waitForFinalEvent = (function () {
+        var timers = {};
+        return function (callback, ms, uniqueId) {
+        if (!uniqueId) {
+          uniqueId = "Don't call this twice without a uniqueId";
+        }
+        if (timers[uniqueId]) {
+          clearTimeout (timers[uniqueId]);
+        }
+        timers[uniqueId] = setTimeout(callback, ms);
+        };
+      })();
+
+      $("#ifm").load(function() {
+        $(this).width( $("#inside").width() );
+        $(this).height( $("#inside").height() );
+      });
+
+      $( window ).resize( function() {
+        waitForFinalEvent( function() {
+          $("#ifm").width( $("#inside").width() );
+          $("#ifm").height( $("#inside").height() );
+        },200,"iframeresize");
+      });
+
+     $(".sidebar-toggle" ).click( function() {
+        waitForFinalEvent( function() {
+          $("#ifm").width( $("#inside").width() );
+          $("#ifm").height( $("#inside").height() );
+        },500,"iframeresize");
+      });
+
+
 
     </script>
 

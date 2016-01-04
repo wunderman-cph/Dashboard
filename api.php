@@ -1,11 +1,35 @@
-<?php
-  $doc = new DomDocument;
 
-  // We need to validate our document before refering to the id
-  //$doc->validateOnParse = true;
-  $doc->loadXML(file_get_contents('http://'.$_SERVER["HTTP_HOST"].':8080/wdm/Key.jssp'));
+<?php
+
+  // Debug
+  ini_set('display_errors', 'On');
+
+  /* Callback Functions */
+ 
+
+
+
+  // Get SOAP Session Key
+  $url = "http://192.168.95.101:8080/nl/jsp/soaprouter.jsp?wsdl";
+
+  $client = new SoapClient(null, array(
+      'location' => $url,
+      'uri' => 'urn:xtk:session'
+      ));
+
+  try {
+    $params = array('strLogin'=>'api','strPassword'=>'api');
+    $client->Logon($params);
+  } catch (SoapFault $exception) {
+    echo ("<h3>ERROR</h3><pre>".$exception."</pre>");
+  }
+  // Create SOAP Message for Campaign List
+
+
+
+
   
-  echo $doc->saveXML();
+
 ?>
 
 <!DOCTYPE html>
@@ -112,7 +136,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!-- Content -->
           <h1>
-            Webservice Endpoint
+            API Tests
           </h1>
 
           <!-- Breadcrumb -->
@@ -125,17 +149,85 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!-- Your Page Content Here -->
         <section class="content">
-          <div class="row">            
-            <div class="col-md-12">
-              <p>API Endpoint: <strong>http://api.webhookinbox.com/i/<?=$id?>/in/</strong></p>
-              <p>This page will update every 5 seconds</p>
-              <div class="container" id="webhook">
-    		        <pre>Waiting for Webservice call</pre>  
-              </div>
-            </div>
-        
-            </div>
-            </section>
+
+          <!-- Row -->
+          <div class="row">
+
+            <!-- Column -->
+            <div class="col-md-8">
+
+              <!-- Get Campaign Test -->
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Get Campaign</h3>
+                </div>    
+              
+                <form class="form-horizontal">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-2 control-label">Select Campaign</label>
+
+                      <div class="col-sm-10">
+                        <select class="form-control">
+                          <option>option 1</option>
+                          <option>option 2</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </form>              
+            
+              </div> <!-- /. Get Campaign Test -->
+
+              <!-- Campaign Preview Test -->
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Preview Campaign</h3>
+                </div>    
+                
+                <form class="form-horizontal">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-2 control-label">Select Campaign</label>
+
+                      <div class="col-sm-10">
+                        <select class="form-control">
+                          <option>option 1</option>
+                          <option>option 2</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                  </div><!-- /.box-body -->
+
+
+                  <div class="box-body" id="preview">
+                    <i>This is where preview will be generated</i>
+                  </div>
+
+                  
+                  <div class="box-footer">
+                    <button type="submit" class="btn btn-info pull-right">Submit</button>
+                  </div><!-- /.box-footer -->
+
+                </form>              
+            
+
+
+              </div> <!-- /. Preview Test -->
+
+
+            </div> <!-- /. Column -->
+
+          </div> <!-- /. Row -->
+        </section>
         </div>
 
       </div><!-- /.content-wrapper -->

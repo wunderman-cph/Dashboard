@@ -27,11 +27,12 @@
     <!-- Optionally, you can add icons to the links -->
     <li ><a href="https://docs.campaign.adobe.com/doc/AC6.1/en/home.html" target="blank"><i class="fa fa-book"></i> <span>Adobe Campaign</span></a></li>
     <li ><a href="http://docs.adobe.com/content/docs/en/aem/6-1.html" target="blank"><i class="fa fa-book"></i> <span>Adobe Experience Manager</span></a></li>
-
+    <li <?=li_active('releasenotes.php')?>><a href="releasenotes.php"><i class="fa fa-book"></i> <span>Campaign Release Notes</span></a></li>
 
     <li class="header">WUNDERMAN</li>
      <li <?=li_active('email.php')?>><a href="email.php"><i class="fa fa-link"></i> <span>Email</span></a></li>
      <li <?=li_active('webhook.php')?>><a href="webhook.php"><i class="fa fa-link"></i> <span>Webservice Trap</span></a></li>
+     <li <?=li_active('api.php')?>><a href="api.php"><i class="fa fa-link"></i> <span>API Tests</span></a></li>
     <li class="treeview">
       <a href="#"><i class="fa fa-link"></i> <span>Websites</span> <i class="fa fa-angle-left pull-right"></i></a>
       <ul class="treeview-menu">
