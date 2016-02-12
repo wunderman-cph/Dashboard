@@ -176,6 +176,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </tr>    
                 <tr>
                   <td>
+                    Launch WCM  
+                  </td>
+                  <td>
+                    <a href="http://<?=$_SERVER['HTTP_HOST']?>:4502/miscadmin"><button type="button" class="btn btn-block btn-success">Launch</button></a>
+                  </td>
+                </tr>                 
+                <tr>
+                  <td>
                     Launch ConfigMgr
                   </td>
                   <td>
