@@ -32,7 +32,8 @@
     <li class="header">WUNDERMAN</li>
      <li <?=li_active('email.php')?>><a href="email.php"><i class="fa fa-link"></i> <span>Email</span></a></li>
      <li <?=li_active('webhook.php')?>><a href="webhook.php"><i class="fa fa-link"></i> <span>Webservice Trap</span></a></li>
-     <li <?=li_active('api.php')?>><a href="api.php"><i class="fa fa-link"></i> <span>API Tests</span></a></li>
+     <li <?=li_active('api.php')?>><a href="api.php"><i class="fa fa-link"></i> <span>API Browser</span></a></li>
+     <li <?=li_active('apitest.php')?>><a href="apitest.php"><i class="fa fa-link"></i> <span>API Test</span></a></li>
     <li class="treeview">
       <a href="#"><i class="fa fa-link"></i> <span>Websites</span> <i class="fa fa-angle-left pull-right"></i></a>
       <ul class="treeview-menu">

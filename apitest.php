@@ -1,106 +1,12 @@
 <?php
 
+  // Debug
+  ini_set('display_errors', 'On');
+
   /* Callback Functions */
 
-  // If parameter for a callback function exists then use that instead of rendering the page.
-
-  // SOAP Action URL
+  // Get SOAP Session Key
   $url = "http://".$_SERVER['HTTP_HOST'].":8080/nl/jsp/soaprouter.jsp";
-
-  if(isset($_GET['call'])) {
-    
-     try {
-
-        /* Get Security Token */
-
-        $client = new SoapClient("http://".$_SERVER['HTTP_HOST']."/wsdl/xtk.session.wsdl", array(
-            'location' => $url
-        ));
-
-        $result = $client->Logon(array(
-            'sessiontoken' => '',
-            'strLogin' => 'admin',
-            'strPassword' => 'admin',        
-            'elemParameters' => ''
-        ));
-
-        $securityToken = $result->pstrSecurityToken;
-        $sessionToken = $result->pstrSessionToken;
-
-      } catch (SoapFault $exception) {
-        echo ($exception);
-        exit;
-      }
-
-
-      if(isset($_GET['schema'])) {
-
-        // Call QueryDef and Get Schema
-        $client = new SoapClient("http://".$_SERVER['HTTP_HOST']."/wsdl/xtk.querydef.wsdl", array(
-            'location' => $url,
-            'trace' => 0,
-            'encoding' => 'UTF-8'
-        ));
-      
-
-        $queryDef = new SimpleXMLElement("<queryDef></queryDef>");
-        $queryDef->addAttribute('operation','get');
-        $queryDef->addAttribute('schema','xtk:schema');
-        $select = $queryDef->addChild('select');
-        $node = $select->addChild('node');
-        $node->addAttribute('expr','data');
-        $where = $queryDef->addChild('where');
-        $node = $where->addChild('condition');
-        $node['expr'] = "@namespace='nms'";
-        $node = $where->addChild('condition');
-        $node['expr'] = "@name='recipient'";
-
-
-        $test = '<queryDef operation="get" schema="xtk:schema"><select><node expr="data"/></select><where><condition expr="@namespace=\'nms\'"/><condition expr="@name=\'recipient\'"/></where></queryDef>';
-
-        echo ("<div class='content'><h3>securityToken</h3><pre>".$securityToken."\n".$sessionToken."</pre></div>");
-        echo ("<div class='content'><h3>Body (Test and XML)</h3><pre>".htmlspecialchars($test)."</pre><pre>".htmlspecialchars($queryDef->asXML())."</pre></div>");
-        
-        try {
-
-          //$header     = new SoapHeader("xtk.querydef","X-Security-Token", $securityToken, false);
-          //$client -> __setSoapHeaders($header);
-
-          echo ("<div class='content'><h3>Client</h3><pre>".var_export($client,true)."</pre></div>");
- 
-          /*
-          $result = $client->ExecuteQuery(array(
-            'sessiontoken' => $sessionToken,
-            'entity' => $queryDef,
-            'res' => ''       
-            ));   
-          */
-          
-          
-          $params = array('sessiontoken' => $sessionToken,'entity' => $test);
-          $result = $client->__soapCall("ExecuteQuery",array('parameters'=>$params));  
-
-          echo ("<div class='content'><h3>Schema Call Result</h3><pre>".var_export($result,true)."</pre></div>");
-
-
-        } catch (SoapFault $exception) {
-          echo ("<div class='content'><h3>ERROR</h3><pre>".htmlspecialchars(var_export($exception,true))."</pre></div>");
-          exit;
-        }
-
-        echo ("<div class='content'><h3>Result</h3><pre>".var_export($result,true)."</pre></div>");
-        echo ("Done");
-      }
-      elseif(isset($_GET['somethingelse'])) {
-
-      };
-
-      // Exit the script and do not process the rest of the page
-      exit;
-  }
-
-
-
 
   try {
 
@@ -108,7 +14,7 @@
         'location' => $url
     ));
 
-    echo ("<div class='content'><h3>Available Functions: Session</h3><pre>".implode("\n",$client->__getFunctions())."</pre></div>");
+    echo ("<div class='content'><h3>Available Functions</h3><pre>".implode("\n",$client->__getFunctions())."</pre></div>");
 
     $result = $client->Logon(array(
         'sessiontoken' => '',
@@ -122,17 +28,6 @@
     $securityToken = $result->pstrSecurityToken;
 
     echo ("<div class='content'><h3>Security Token</h3><pre>".$result->pstrSecurityToken."</pre></div>");
-
-
-
-    $client = new SoapClient("http://".$_SERVER['HTTP_HOST']."/wsdl/xtk.querydef.wsdl", array(
-        'location' => $url
-    ));
-
-    echo ("<div class='content'><h3>Available Functions: QueryDef</h3><pre>".implode("\n",$client->__getFunctions())."</pre></div>");
-
-
-    // Store Session Token in a session cookie. If found then always use this one instead.
 
 
   } catch (SoapFault $exception) {
@@ -244,7 +139,7 @@
 
           <!-- Content -->
           <h1>
-            API Browser
+            API Tests
           </h1>
 
           <!-- Breadcrumb -->
@@ -273,21 +168,23 @@
                 <form class="form-horizontal">
                   <div class="box-body">
                     <div class="form-group">
-                      <label for="inputEmail3" class="col-sm-2 control-label">Select Schema</label>
+                      <label for="inputEmail3" class="col-sm-2 control-label">Select Campaign</label>
 
                       <div class="col-sm-10">
                         <select class="form-control">
-                          <option></option>
+                        <?php 
 
-                          <?php 
+                          foreach ($schemas as $item) {
+                            echo("<option>".$item['namespace'].":".$item['name']."</option>");
+                          }
 
-                            foreach ($schemas as $item) {
-                              echo("<option>".$item['namespace'].":".$item['name']."</option>");
-                            }
+                        ?>
 
-                          ?>
-
-                          
+                          <option>option 1</option>
+                          <option>option 2</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
                         </select>
                       </div>
                     </div>
@@ -297,30 +194,46 @@
             
               </div> <!-- /. Get Campaign Test -->
 
-              <!-- WSDL and Functions -->
+              <!-- Campaign Preview Test -->
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Preview Campaign</h3>
+                </div>    
+                
+                <form class="form-horizontal">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-2 control-label">Select Campaign</label>
 
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="nav-tabs-custom" style="cursor: move;">
-                    <!-- Tabs within a box -->
-                    <ul class="nav nav-tabs pull-right ui-sortable-handle">
-                      <li class=""><a href="#log" data-toggle="tab" aria-expanded="true">Functions</a></li>
-                      <li class="active"><a href="#pdump" data-toggle="tab" aria-expanded="false">WSDL</a></li>
-                      
-                      <li class="pull-left header"><i class="fa fa-file-text"></i>API Detail</li>
-                    </ul>
-                    <div class="tab-content">
-                      <!-- PDump -->
-                      <div class="tab-pane active" id="pdump" style="position: relative; min-height: 100px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-                      <pre>[[INSERT WSDL HERE]]</pre>
-                      </div>
-                      <div class="tab-pane" id="log" style="position: relative; min-height: 100px;">
-                      <pre>[[INSERT FUNCTIONS HERE]]</pre>
+                      <div class="col-sm-10">
+                        <select class="form-control">
+                          <option>option 1</option>
+                          <option>option 2</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
+                        </select>
                       </div>
                     </div>
+                    
+                  </div><!-- /.box-body -->
+
+
+                  <div class="box-body" id="preview">
+                    <i>This is where preview will be generated</i>
                   </div>
-                </div>
-              </div>              
+
+                  
+                  <div class="box-footer">
+                    <button type="submit" class="btn btn-info pull-right">Submit</button>
+                  </div><!-- /.box-footer -->
+
+                </form>              
+            
+
+
+              </div> <!-- /. Preview Test -->
+
 
             </div> <!-- /. Column -->
 
@@ -411,23 +324,23 @@
      <!-- Custom Code -->
      <script>
 
-     var securityToken = "<?= $securityToken ?>";
+     var last_cursor = 0;
+     var id = <?= $doc ?>;
+     setInterval(function(){ doPoll(); }, 1000);
+    
+      function toHtml(str) {
+          return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
 
-      $( document ).ready(function () {
-         $('select').change(function () {
-            $.get('ajax.php?option=' + $('select').val(), function(data) {
-                if(data == "error")
-                {
-                    //handle error
-                }
-                else {
-                    $('div.ajax-form').append(data); //create an element where you want to add 
-                                                     //this data
-                }
-            });
-         });
-       });
-
+      function doPoll(){
+        $.get('http://api.webhookinbox.com/i/'+id+'/items/?order=created&since=id:'+last_cursor, function(data) {
+            if (data.items.length > 0 && data.last_cursor != last_cursor) {
+              last_cursor = data.last_cursor;
+              $("#webhook").html("<pre>"+toHtml(data.items[data.items.length-1].body)+"</pre>");
+            }
+            setTimeout(doPoll,4000);
+        });
+      }
 
     </script>
 

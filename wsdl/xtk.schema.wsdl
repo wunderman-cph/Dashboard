@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <definitions targetNamespace="urn:xtk:schema" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="urn:xtk:schema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+        <types>
+            <s:schema elementFormDefault="qualified" targetNamespace="urn:xtk:schema">
+                <s:complexType name="Element">
+                    <s:sequence>
+                        <s:any processContents="lax" /></s:sequence>
+                </s:complexType>
+            </s:schema>
+        </types>
+        <portType name="schemaMethodsSoap" />
+        <binding name="schemaMethodsSoap" type="tns:schemaMethodsSoap">
+            <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        </binding>
+        <service name="XtkSchema">
+            <port binding="tns:schemaMethodsSoap" name="schemaMethodsSoap">
+                <soap:address location="http://192.168.95.101:8080/nl/jsp/soaprouter.jsp" />
+            </port>
+        </service>
+    </definitions>

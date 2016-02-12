@@ -1,4 +1,3 @@
-<?php ini_set('display_errors', 'On'); ?>
 <?php include('log.php'); ?>
 <?php
 
@@ -152,7 +151,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <td>
                     http://<?=$_SERVER['HTTP_HOST']?>:8080
                   </td>
-                </tr>    
+                </tr>  
+                <tr>
+                  <td>
+                    Client Download
+                  </td>
+                  <td>
+                    Download from <a href="https://eshare.wunderman.com/dl/3TiJGaBTKw">here</a>
+                  </td>
+                </tr>  
+
+
                 <tr>
                   <td>
                     Username and Password
