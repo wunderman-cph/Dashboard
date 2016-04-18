@@ -11,7 +11,6 @@
 
   /* Return log file output */
 
-
   function getFile($file) {
 
     session_start();

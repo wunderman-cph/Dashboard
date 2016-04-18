@@ -1,3 +1,25 @@
+<?php include('log.php'); ?>
+<?php
+
+  /* Neolane PDump */
+  $nlpdump = getCommand('sudo -i -u neolane bash -c ". nl6/env.sh;/usr/local/neolane/nl6/bin/nlserver pdump"');
+  $catalinalog = getCommand('tail -n 1000 $(/bin/ls -1t /usr/local/neolane/nl6/var/logs/* | /bin/sed q)');
+
+  if (strpos($nlpdump,'web@') !== false) {
+    $nlstatus = "Running";
+  } else {
+    $nlstatus = "Not Running";
+  }
+
+  $c = getCommand('sudo -i -u neolane bash -c ". nl6/env.sh;/usr/local/neolane/nl6/bin/nlserver web -version"');
+  if (preg_match("/for (.*?) o/i", $c, $matches)) {
+    $nlversion = $matches[1];
+  } else {
+    $nlversion = $c;
+  }
+
+
+?>
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from

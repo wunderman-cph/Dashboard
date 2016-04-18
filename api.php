@@ -1,5 +1,8 @@
 <?php
 
+  // Debug
+  ini_set('display_errors', 'On');
+
   /* Callback Functions */
 
   // If parameter for a callback function exists then use that instead of rendering the page.
@@ -38,8 +41,8 @@
         // Call QueryDef and Get Schema
         $client = new SoapClient("http://".$_SERVER['HTTP_HOST']."/wsdl/xtk.querydef.wsdl", array(
             'location' => $url,
-            'trace' => 0,
-            'encoding' => 'UTF-8'
+            'uri' => 'http://'.$_SERVER['HTTP_HOST'],
+            'trace' => 1
         ));
       
 
@@ -56,7 +59,7 @@
         $node['expr'] = "@name='recipient'";
 
 
-        $test = '<queryDef operation="get" schema="xtk:schema"><select><node expr="data"/></select><where><condition expr="@namespace=\'nms\'"/><condition expr="@name=\'recipient\'"/></where></queryDef>';
+        $test = '<queryDef operation="get" schema="xtk:schema"><select><node expr="@name"/></select><where><condition expr="@namespace=\'nms\'"/><condition expr="@name=\'recipient\'"/></where></queryDef>';
 
         echo ("<div class='content'><h3>securityToken</h3><pre>".$securityToken."\n".$sessionToken."</pre></div>");
         echo ("<div class='content'><h3>Body (Test and XML)</h3><pre>".htmlspecialchars($test)."</pre><pre>".htmlspecialchars($queryDef->asXML())."</pre></div>");
@@ -67,24 +70,29 @@
           //$client -> __setSoapHeaders($header);
 
           echo ("<div class='content'><h3>Client</h3><pre>".var_export($client,true)."</pre></div>");
- 
-          /*
+
+          $myClass = new stdClass;
+          $myClass->sessiontoken = $sessionToken;
+          $myClass->entity = 1;
+/*
           $result = $client->ExecuteQuery(array(
             'sessiontoken' => $sessionToken,
-            'entity' => $queryDef,
-            'res' => ''       
+            'entity' => array($test)     
             ));   
-          */
-          
-          
-          $params = array('sessiontoken' => $sessionToken,'entity' => $test);
-          $result = $client->__soapCall("ExecuteQuery",array('parameters'=>$params));  
+*/
+          $result = $client->ExecuteQuery($myClass);
+
 
           echo ("<div class='content'><h3>Schema Call Result</h3><pre>".var_export($result,true)."</pre></div>");
 
 
         } catch (SoapFault $exception) {
-          echo ("<div class='content'><h3>ERROR</h3><pre>".htmlspecialchars(var_export($exception,true))."</pre></div>");
+
+
+          echo ("<div class='content'><h3>ERROR</h3><pre><xmp>".$exception->getMessage()."</xmp></pre></div>");
+
+          echo ("<div class='content'><h3>LAST CALL</h3><pre>".htmlentities($client->__getLastRequest())."</pre></div>");
+
           exit;
         }
 
@@ -270,13 +278,16 @@
                   <h3 class="box-title">Schemas</h3>
                 </div>    
               
-                <form class="form-horizontal">
+                <form class="form-horizontal" method="GET" id="schemaform" action="<?=basename(__FILE__)?>">
                   <div class="box-body">
                     <div class="form-group">
                       <label for="inputEmail3" class="col-sm-2 control-label">Select Schema</label>
-
+                      <input type="hidden" name="call">
                       <div class="col-sm-10">
-                        <select class="form-control">
+
+                        <div class="input-group input-group-sm">
+
+                          <select class="form-control" name="schema">
                           <option></option>
 
                           <?php 
@@ -287,8 +298,14 @@
 
                           ?>
 
-                          
-                        </select>
+
+                          </select>
+                          <span class="input-group-btn">
+                            <button type="submit" class="btn btn-info btn-flat">Go!</button>
+                          </span>
+                        </div>
+
+                        
                       </div>
                     </div>
                     
