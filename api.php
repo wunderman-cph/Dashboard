@@ -124,14 +124,15 @@
         'strPassword' => 'admin',        
         'elemParameters' => ''
     ));
-
+/*
     echo ("<div class='content'><h3>Result</h3><pre>".var_export($result,true)."</pre></div>");
-
+*/
     $securityToken = $result->pstrSecurityToken;
+    $sessionToken = $result->pstrSessionToken;
 
     echo ("<div class='content'><h3>Security Token</h3><pre>".$result->pstrSecurityToken."</pre></div>");
 
-
+    echo ("<div class='content'><h3>Session Token</h3><pre>".$result->pstrSessionToken."</pre></div>");
 
     $client = new SoapClient("http://".$_SERVER['HTTP_HOST']."/wsdl/xtk.querydef.wsdl", array(
         'location' => $url
@@ -139,17 +140,21 @@
 
     echo ("<div class='content'><h3>Available Functions: QueryDef</h3><pre>".implode("\n",$client->__getFunctions())."</pre></div>");
 
-
     // Store Session Token in a session cookie. If found then always use this one instead.
-
+    
+    
+    // Request list of all schemas
+    
+   $schema = file_get_contents("http://".$_SERVER['HTTP_HOST'].":8080/nl/jsp/schemawsdl.jsp?schema=xtk:queryDef&__sessiontoken=".$sessionToken."");  
+   echo ("<div class='content'><h3>Schema Output</h3><pre>".htmlentities($schema)."</pre></div>"); 
 
   } catch (SoapFault $exception) {
     echo ("<div class='content'><h3>ERROR</h3><pre>".$exception."</pre></div>");
   }
 
   // Get a List of all Schemas
-  $schemas = json_decode(file_get_contents("http://".$_SERVER['HTTP_HOST'].":8080/wdm/schemaquery.jssp"),true);
-
+  //$schemas = json_decode(file_get_contents("http://".$_SERVER['HTTP_HOST'].":8080/wdm/schemaquery.jssp"),true);
+  
 ?>
 
 <!DOCTYPE html>
@@ -186,6 +191,9 @@
         margin: 0;            /* Reset default margin */
         padding: 0px;
         width:100%;
+    }
+    .content {
+      min-height:0px !important;
     }
     </style>
   </head>
