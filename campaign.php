@@ -164,7 +164,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     API URL
                   </td>
                   <td>
-                    http://<?_SERVER['HTTP_POST']?>:8080/nl/jsp/soaprouter.jsp
+                    http://<?$_SERVER['HTTP_POST']?>:8080/nl/jsp/soaprouter.jsp
                   </td>
                 </tr> 
                 <tr>
