@@ -1,6 +1,32 @@
 <?php include('log.php'); ?>
 <?php
 
+  /* Commands */
+  $pubStatusCmd = getCommand();
+  $authStatusCmd = getCommand();
+
+  /* Status */
+  if (strpos($pubStatusCmd,'web@') !== false) {
+    $pubStatus = "Running";
+  } else {
+    $pubStatus = "Not Running";
+  }
+
+  if (strpos($pubStatusCmd,'web@') !== false) {
+    $pubStatus = "Running";
+  } else {
+    $pubStatus = "Not Running";
+  }
+
+  /* Version */
+  $c = getCommand('sudo -i -u neolane bash -c ". nl6/env.sh;/usr/local/neolane/nl6/bin/nlserver web -version"');
+  if (preg_match("/for (.*?) o/i", $c, $matches)) {
+    $nlversion = $matches[1];
+  } else {
+    $nlversion = $c;
+  }
+
+
 ?>
 <!DOCTYPE html>
 <!--

@@ -158,8 +158,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     Download from <a href="https://eshare.wunderman.com/dl/3TiJGaBTKw">here</a>
                   </td>
                 </tr>  
-
-
+  
+                <tr>
+                  <td>
+                    API URL
+                  </td>
+                  <td>
+                    http://<?_SERVER['HTTP_POST']?>:8080/nl/jsp/soaprouter.jsp
+                  </td>
+                </tr> 
                 <tr>
                   <td>
                     Username and Password
